@@ -8,23 +8,40 @@ public class PrimeFinderThread extends Thread{
 	
 	int a,b;
 	
-	private List<Integer> primes;
+	private final List<Integer> primes;
+
+    private final int time;
+
+    private boolean slept = false;
 	
-	public PrimeFinderThread(int a, int b) {
+	public PrimeFinderThread(int a, int b, List<Integer> primes, int time) {
 		super();
-                this.primes = new LinkedList<>();
 		this.a = a;
 		this.b = b;
+        this.primes = primes;
+        this.time = time;
 	}
 
-        @Override
+    @Override
 	public void run(){
-            for (int i= a;i < b;i++){						
-                if (isPrime(i)){
+        synchronized (primes) {
+            long tiempo = System.currentTimeMillis();
+            for (int i = a; i < b; i++) {
+                if (isPrime(i)) {
                     primes.add(i);
                     System.out.println(i);
                 }
+                if (System.currentTimeMillis() - tiempo > time) {
+                    System.out.println("TIEMPO###############################################");
+                    try {
+                        slept = true;
+                        primes.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
+        }
 	}
 	
 	boolean isPrime(int n) {
@@ -43,5 +60,12 @@ public class PrimeFinderThread extends Thread{
 	public List<Integer> getPrimes() {
 		return primes;
 	}
-	
+
+    public boolean isSlept() {
+        return slept;
+    }
+
+    public void setSlept(boolean slept) {
+        this.slept = slept;
+    }
 }
