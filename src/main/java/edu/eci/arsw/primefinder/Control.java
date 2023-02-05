@@ -46,26 +46,19 @@ public class Control extends Thread {
         for(int i = 0;i < NTHREADS;i++ ) {
             pft[i].start();
         }
-        synchronized (primes) {
-            while (sleptThreads()) {
-                try {
-                    System.out.println("ME DORMÍ #########################");
-                    Thread.sleep(5000);
-                    System.out.println("ME DESPERTÉ #########################");
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+        while (true) {
+            String line = input.nextLine();
+            if ("bye".equalsIgnoreCase(line)) {
+                break;
+            }
+            synchronized (primes) {
+                for (PrimeFinderThread thread : pft) {
+                    System.out.println(thread.getPrimes());
                 }
                 primes.notifyAll();
             }
         }
+
     }
 
-    public boolean sleptThreads() {
-        for (PrimeFinderThread thread : pft) {
-            if (!thread.isSlept()) {
-                return false;
-            }
-        }
-        return true;
-    }
 }

@@ -11,8 +11,6 @@ public class PrimeFinderThread extends Thread{
 	private final List<Integer> primes;
 
     private final int time;
-
-    private boolean slept = false;
 	
 	public PrimeFinderThread(int a, int b, List<Integer> primes, int time) {
 		super();
@@ -29,19 +27,20 @@ public class PrimeFinderThread extends Thread{
             for (int i = a; i < b; i++) {
                 if (isPrime(i)) {
                     primes.add(i);
-                    System.out.println(i);
+                    //System.out.println(i);
                 }
                 if (System.currentTimeMillis() - tiempo > time) {
-                    System.out.println("TIEMPO###############################################");
+                    System.out.println("------------------ TIEMPO ------------------");
                     try {
-                        slept = true;
                         primes.wait();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                    tiempo = System.currentTimeMillis();
                 }
             }
         }
+        //System.out.println("------------------ ACABÉ ------------------");
 	}
 	
 	boolean isPrime(int n) {
@@ -61,11 +60,4 @@ public class PrimeFinderThread extends Thread{
 		return primes;
 	}
 
-    public boolean isSlept() {
-        return slept;
-    }
-
-    public void setSlept(boolean slept) {
-        this.slept = slept;
-    }
 }
