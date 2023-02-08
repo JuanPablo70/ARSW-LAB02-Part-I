@@ -52,9 +52,7 @@ public class Control extends Thread {
                 break;
             }
             synchronized (primes) {
-                for (PrimeFinderThread thread : pft) {
-                    System.out.println(thread.getPrimes());
-                }
+                System.out.println(primes);
                 primes.notifyAll();
             }
         }

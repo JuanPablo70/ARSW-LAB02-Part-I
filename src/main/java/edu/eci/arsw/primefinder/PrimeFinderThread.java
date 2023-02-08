@@ -22,12 +22,12 @@ public class PrimeFinderThread extends Thread{
 
     @Override
 	public void run(){
-        synchronized (primes) {
-            long tiempo = System.currentTimeMillis();
-            for (int i = a; i < b; i++) {
+        long tiempo = System.currentTimeMillis();
+        for (int i = a; i < b; i++) {
+            synchronized (primes) {
                 if (isPrime(i)) {
-                    primes.add(i);
-                    //System.out.println(i);
+                primes.add(i);
+                //System.out.println(i);
                 }
                 if (System.currentTimeMillis() - tiempo > time) {
                     System.out.println("------------------ TIEMPO ------------------");
@@ -40,7 +40,7 @@ public class PrimeFinderThread extends Thread{
                 }
             }
         }
-        //System.out.println("------------------ ACABÉ ------------------");
+        System.out.println("------------------ ACABÉ ------------------");
 	}
 	
 	boolean isPrime(int n) {
@@ -54,10 +54,6 @@ public class PrimeFinderThread extends Thread{
                 ans = n == 2;
             }
 	    return ans;
-	}
-
-	public List<Integer> getPrimes() {
-		return primes;
 	}
 
 }
